@@ -1,4 +1,4 @@
-#include "stack.h"
+#include "tt_stack.h"
 #include <stdlib.h>
 
 bool stack_initialize(Stack *stack, int size)
