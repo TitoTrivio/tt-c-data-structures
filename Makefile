@@ -22,7 +22,7 @@ BUILD ?= debug
 
 # Project configuration
 
-TARGET := tt-c-data-structures
+TARGET := tt_c_data_structures
 
 BUILD_DIR := build/$(BUILD)
 BIN_DIR   := bin/$(BUILD)
