@@ -1,94 +1,90 @@
-#include "tt_stack.h"
 #include <stdlib.h>
+#include "tt_stack.h"
 
-bool stack_initialize(Stack *stack, int size)
+/* Stack initialization and finalization */
+
+bool stack_initialize(Stack *stack, size_t capacity)
 {
-    if(size < 0)
+    if (!stack)
         return false;
     
-    stack->data = NULL;
-    
-    if(size != 0)
+    if (capacity > 0)
     {
-        stack->data = malloc(size * sizeof(void*));
+        stack->items = malloc(sizeof(void *) * capacity);
         
-        if(!stack->data)
+        if (!stack->items)
             return false;
     }
+    else
+    {
+        stack->items = NULL;
+    }
 
-    stack->top = -1;
-    stack->size = size;
+    stack->count = 0;
+    stack->capacity = capacity;
 
     return true;
 }
 
-void stack_finalize(Stack *stack, bool free_data)
+void stack_finalize(Stack *stack, bool free_items)
 {
-    if(!stack)
+    if (!stack)
         return;
 
-    if(stack->data)
+    if (stack->items)
     {
-        if(free_data)
+        if (free_items)
         {
-            for(int i = 0; i <= stack->top; i++)
-                free(stack->data[i]);
+            for (size_t i = 0; i < stack->count; i++)
+                free(stack->items[i]);
         }
 
-        free(stack->data);
+        free(stack->items);
     }
 
-    stack->data = NULL;
-    stack->top = -1;
-    stack->size = 0;
+    stack->items = NULL;
+    stack->count = 0;
+    stack->capacity = 0;
 }
 
-Stack *stack_new(int size)
+/* Core stack operations */
+
+bool stack_push(Stack *stack, void *item)
 {
-    Stack *stack = (Stack*) malloc(sizeof(Stack));
-
-    if(!stack_initialize(stack, size))
-    {
-        free(stack);
-        return NULL;
-    }
-
-    return stack;
-}
-
-void stack_free(Stack *stack, bool free_data)
-{
-    if(!stack)
-        return;
-
-    stack_finalize(stack, free_data);
-
-    free(stack);
-}
-
-bool stack_push(Stack *stack, void *value)
-{
-    if(stack->top + 1 >= stack->size)
+    if (!stack)
+        return false;
+    
+    if (!stack->items || stack->count >= stack->capacity)
         return false;
 
-    stack->data[++stack->top] = value;
+    stack->items[stack->count++] = item;
 
     return true;
 }
 
 void *stack_pop(Stack *stack)
 {
-    if(stack->top < 0)
+    if (!stack)
         return NULL;
-
-    void *value = stack->data[stack->top];
-
-    stack->data[stack->top] = NULL;
-
-    stack->top--;
-
-    return value;
+    
+    if (!stack->items || stack->count == 0)
+        return NULL;
+    
+    return stack->items[--stack->count];
 }
+
+void *stack_peek(Stack *stack)
+{
+    if (!stack)
+        return NULL;
+    
+    if (!stack->items || stack->count == 0)
+        return NULL;
+    
+    return stack->items[stack->count - 1];
+}
+
+/* Type specific push */
 
 bool stack_push_int(Stack *stack, int value)
 {
@@ -130,6 +126,8 @@ bool stack_push_str(Stack *stack, char *value)
 {
     return stack_push(stack, value);
 }
+
+/* Type specific pop */
 
 int stack_pop_int(Stack *stack)
 {
