@@ -7,20 +7,22 @@ bool stack_initialize(Stack *stack, size_t capacity)
 {
     if (!stack)
         return false;
+
+    stack->items = NULL;
+    stack->count = 0;
+    stack->capacity = 0;
     
     if (capacity > 0)
     {
-        stack->items = malloc(sizeof(void *) * capacity);
+        stack->items = malloc(sizeof(stack->items) * capacity);
         
         if (!stack->items)
             return false;
-    }
-    else
-    {
-        stack->items = NULL;
+
+        for(size_t i = 0; i < capacity; ++i)
+            stack->items[i] = NULL;
     }
 
-    stack->count = 0;
     stack->capacity = capacity;
 
     return true;
@@ -70,7 +72,13 @@ void *stack_pop(Stack *stack)
     if (!stack->items || stack->count == 0)
         return NULL;
     
-    return stack->items[--stack->count];
+    --stack->count;
+
+    void *item = stack->items[stack->count];
+
+    stack->items[stack->count] = NULL;
+
+    return item;
 }
 
 void *stack_peek(Stack *stack)
@@ -88,7 +96,7 @@ void *stack_peek(Stack *stack)
 
 bool stack_push_int(Stack *stack, int value)
 {
-    int *ptr = (int*) malloc(sizeof(int));
+    int *ptr = (int *) malloc(sizeof(int));
     
     *ptr = value;
 
@@ -97,7 +105,7 @@ bool stack_push_int(Stack *stack, int value)
 
 bool stack_push_char(Stack *stack, char value)
 {
-    char *ptr = (char*) malloc(sizeof(char));
+    char *ptr = (char *) malloc(sizeof(char));
     
     *ptr = value;
 
@@ -106,7 +114,7 @@ bool stack_push_char(Stack *stack, char value)
 
 bool stack_push_float(Stack *stack, float value)
 {
-    float *ptr = (float*) malloc(sizeof(float));
+    float *ptr = (float *) malloc(sizeof(float));
     
     *ptr = value;
 
@@ -115,7 +123,7 @@ bool stack_push_float(Stack *stack, float value)
 
 bool stack_push_double(Stack *stack, double value)
 {
-    double *ptr = (double*) malloc(sizeof(double));
+    double *ptr = (double *) malloc(sizeof(double));
     
     *ptr = value;
 
@@ -175,6 +183,6 @@ double stack_pop_double(Stack *stack)
 
 char *stack_pop_str(Stack *stack)
 {
-    return (char*) stack_pop(stack);
+    return (char *) stack_pop(stack);
 }
 
