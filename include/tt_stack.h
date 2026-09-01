@@ -28,27 +28,33 @@ bool stack_pop(Stack *stack, void **item);
 
 bool stack_peek(Stack *stack, void **item);
 
-/* Type specific push */
+/* int operations */
 
 bool stack_push_int(Stack *stack, int item);
 
-bool stack_push_char(Stack *stack, char item);
-
-bool stack_push_float(Stack *stack, float item);
-
-bool stack_push_double(Stack *stack, double item);
-
-bool stack_push_str(Stack *stack, char *item);
-
-/* Type specific pop */
-
 bool stack_pop_int(Stack *stack, int *item);
+
+/* char operations */
+
+bool stack_push_char(Stack *stack, char item);
 
 bool stack_pop_char(Stack *stack, char *item);
 
+/* float operations */
+
+bool stack_push_float(Stack *stack, float item);
+
 bool stack_pop_float(Stack *stack, float *item);
 
+/* double operations */
+
+bool stack_push_double(Stack *stack, double item);
+
 bool stack_pop_double(Stack *stack, double *item);
+
+/* string operations */
+
+bool stack_push_str(Stack *stack, char *item);
 
 bool stack_pop_str(Stack *stack, char **item);
 

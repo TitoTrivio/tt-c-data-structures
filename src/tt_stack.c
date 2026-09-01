@@ -94,7 +94,7 @@ bool stack_peek(Stack *stack, void **item)
     return true;
 }
 
-/* Type specific push */
+/* int operations */
 
 bool stack_push_int(Stack *stack, int item)
 {
@@ -114,6 +114,25 @@ bool stack_push_int(Stack *stack, int item)
     return true;
 }
 
+bool stack_pop_int(Stack *stack, int *item)
+{
+    if (!item)
+        return false;
+
+    void *ptr;
+
+    if (!stack_pop(stack, &ptr))
+        return false;
+
+    *item = *(int *)ptr;
+
+    free(ptr);
+
+    return true;
+}
+
+/* char operations */
+
 bool stack_push_char(Stack *stack, char item)
 {
     char *ptr = (char *) malloc(sizeof(*ptr));
@@ -128,66 +147,6 @@ bool stack_push_char(Stack *stack, char item)
         free(ptr);
         return false;
     }
-
-    return true;
-}
-
-bool stack_push_float(Stack *stack, float item)
-{
-    float *ptr = (float *) malloc(sizeof(*ptr));
-    
-    if (!ptr)
-        return false;
-
-    *ptr = item;
-    
-    if (!stack_push(stack, ptr))
-    {
-        free(ptr);
-        return false;
-    }
-
-    return true;
-}
-
-bool stack_push_double(Stack *stack, double item)
-{
-    double *ptr = (double *) malloc(sizeof(*ptr));
-    
-    if (!ptr)
-        return false;
-
-    *ptr = item;
-    
-    if (!stack_push(stack, ptr))
-    {
-        free(ptr);
-        return false;
-    }
-
-    return true;
-}
-
-bool stack_push_str(Stack *stack, char *item)
-{
-    return stack_push(stack, item);
-}
-
-/* Type specific pop */
-
-bool stack_pop_int(Stack *stack, int *item)
-{
-    if (!item)
-        return false;
-
-    void *ptr;
-
-    if (!stack_pop(stack, &ptr))
-        return false;
-
-    *item = *(int *)ptr;
-
-    free(ptr);
 
     return true;
 }
@@ -209,6 +168,26 @@ bool stack_pop_char(Stack *stack, char *item)
     return true;
 }
 
+/* float operations */
+
+bool stack_push_float(Stack *stack, float item)
+{
+    float *ptr = (float *) malloc(sizeof(*ptr));
+    
+    if (!ptr)
+        return false;
+
+    *ptr = item;
+    
+    if (!stack_push(stack, ptr))
+    {
+        free(ptr);
+        return false;
+    }
+
+    return true;
+}
+
 bool stack_pop_float(Stack *stack, float *item)
 {
     if (!item)
@@ -222,6 +201,26 @@ bool stack_pop_float(Stack *stack, float *item)
     *item = *(float *)ptr;
 
     free(ptr);
+
+    return true;
+}
+
+/* double operations */
+
+bool stack_push_double(Stack *stack, double item)
+{
+    double *ptr = (double *) malloc(sizeof(*ptr));
+    
+    if (!ptr)
+        return false;
+
+    *ptr = item;
+    
+    if (!stack_push(stack, ptr))
+    {
+        free(ptr);
+        return false;
+    }
 
     return true;
 }
@@ -241,6 +240,13 @@ bool stack_pop_double(Stack *stack, double *item)
     free(ptr);
 
     return true;
+}
+
+/* string operations */
+
+bool stack_push_str(Stack *stack, char *item)
+{
+    return stack_push(stack, item);
 }
 
 bool stack_pop_str(Stack *stack, char **item)
