@@ -14,7 +14,7 @@ bool stack_initialize(Stack *stack, size_t capacity)
     
     if (capacity > 0)
     {
-        stack->items = malloc(sizeof(stack->items) * capacity);
+        stack->items = malloc(sizeof(*stack->items) * capacity);
         
         if (!stack->items)
             return false;
@@ -37,7 +37,7 @@ void stack_finalize(Stack *stack, bool free_items)
     {
         if (free_items)
         {
-            for (size_t i = 0; i < stack->count; i++)
+            for (size_t i = 0; i < stack->count; ++i)
                 free(stack->items[i]);
         }
 
@@ -64,32 +64,34 @@ bool stack_push(Stack *stack, void *item)
     return true;
 }
 
-void *stack_pop(Stack *stack)
+bool stack_pop(Stack *stack, void **item)
 {
-    if (!stack)
-        return NULL;
+    if (!stack || !item)
+        return false;
     
     if (!stack->items || stack->count == 0)
-        return NULL;
+        return false;
     
     --stack->count;
 
-    void *item = stack->items[stack->count];
-
+    *item = stack->items[stack->count];
+    
     stack->items[stack->count] = NULL;
 
-    return item;
+    return true;
 }
 
-void *stack_peek(Stack *stack)
+bool stack_peek(Stack *stack, void **item)
 {
-    if (!stack)
-        return NULL;
+    if (!stack || !item)
+        return false;
     
     if (!stack->items || stack->count == 0)
-        return NULL;
+        return false;
     
-    return stack->items[stack->count - 1];
+    *item = stack->items[stack->count - 1];
+
+    return true;
 }
 
 /* Type specific push */
@@ -137,52 +139,72 @@ bool stack_push_str(Stack *stack, char *value)
 
 /* Type specific pop */
 
-int stack_pop_int(Stack *stack)
+bool stack_pop_int(Stack *stack, int *item)
 {
-    int *ptr = stack_pop(stack);
+    void *ptr;
 
-    int value = *ptr;
+    bool popped = stack_pop(stack, &ptr);
+
+    if (!popped)
+        return false;
+
+    *item = *(int *)ptr;
 
     free(ptr);
 
-    return value;
+    return true;
 }
 
-char stack_pop_char(Stack *stack)
+bool stack_pop_char(Stack *stack, char *item)
 {
-    char *ptr = stack_pop(stack);
+    void *ptr;
 
-    char value = *ptr;
+    bool popped = stack_pop(stack, &ptr);
+
+    if (!popped)
+        return false;
+
+    *item = *(char *)ptr;
 
     free(ptr);
 
-    return value;
+    return true;
 }
 
-float stack_pop_float(Stack *stack)
+bool stack_pop_float(Stack *stack, float *item)
 {
-    float *ptr = stack_pop(stack);
+    void *ptr;
 
-    float value = *ptr;
+    bool popped = stack_pop(stack, &ptr);
+
+    if (!popped)
+        return false;
+
+    *item = *(float *)ptr;
 
     free(ptr);
 
-    return value;
+    return true;
 }
 
-double stack_pop_double(Stack *stack)
+bool stack_pop_double(Stack *stack, double *item)
 {
-    double *ptr = stack_pop(stack);
+    void *ptr;
 
-    double value = *ptr;
+    bool popped = stack_pop(stack, &ptr);
+
+    if (!popped)
+        return false;
+
+    *item = *(double *)ptr;
 
     free(ptr);
 
-    return value;
+    return true;
 }
-
-char *stack_pop_str(Stack *stack)
+/*
+bool stack_pop_str(Stack *stack, char *item)
 {
-    return (char *) stack_pop(stack);
+    return stack_pop(stack, &item);
 }
-
+*/

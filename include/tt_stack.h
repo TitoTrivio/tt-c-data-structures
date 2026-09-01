@@ -24,9 +24,9 @@ void stack_finalize(Stack *stack, bool free_items);
 
 bool stack_push(Stack *stack, void *item);
 
-void *stack_pop(Stack *stack);
+bool stack_pop(Stack *stack, void **item);
 
-void *stack_peek(Stack *stack);
+bool stack_peek(Stack *stack, void **item);
 
 /* Type specific push */
 
@@ -42,15 +42,15 @@ bool stack_push_str(Stack *stack, char *value);
 
 /* Type specific pop */
 
-int stack_pop_int(Stack *stack);
+bool stack_pop_int(Stack *stack, int *item);
 
-char stack_pop_char(Stack *stack);
+bool stack_pop_char(Stack *stack, char *item);
 
-float stack_pop_float(Stack *stack);
+bool stack_pop_float(Stack *stack, float *item);
 
-double stack_pop_double(Stack *stack);
+bool stack_pop_double(Stack *stack, double *item);
 
-char *stack_pop_str(Stack *stack);
+//bool stack_pop_str(Stack *stack, char *item);
 
 #endif
 
