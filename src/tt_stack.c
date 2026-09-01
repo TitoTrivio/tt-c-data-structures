@@ -177,6 +177,9 @@ bool stack_push_str(Stack *stack, char *item)
 
 bool stack_pop_int(Stack *stack, int *item)
 {
+    if (!item)
+        return false;
+
     void *ptr;
 
     if (!stack_pop(stack, &ptr))
@@ -191,6 +194,9 @@ bool stack_pop_int(Stack *stack, int *item)
 
 bool stack_pop_char(Stack *stack, char *item)
 {
+    if (!item)
+        return false;
+
     void *ptr;
 
     if (!stack_pop(stack, &ptr))
@@ -205,6 +211,9 @@ bool stack_pop_char(Stack *stack, char *item)
 
 bool stack_pop_float(Stack *stack, float *item)
 {
+    if (!item)
+        return false;
+
     void *ptr;
 
     if (!stack_pop(stack, &ptr))
@@ -219,6 +228,9 @@ bool stack_pop_float(Stack *stack, float *item)
 
 bool stack_pop_double(Stack *stack, double *item)
 {
+    if (!item)
+        return false;
+
     void *ptr;
 
     if (!stack_pop(stack, &ptr))
@@ -233,6 +245,9 @@ bool stack_pop_double(Stack *stack, double *item)
 
 bool stack_pop_str(Stack *stack, char **item)
 {
+    if (!item)
+        return false;
+
     void *ptr;
 
     if (!stack_pop(stack, &ptr))
