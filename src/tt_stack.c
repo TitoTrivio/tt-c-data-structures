@@ -168,6 +168,11 @@ bool stack_push_double(Stack *stack, double item)
     return true;
 }
 
+bool stack_push_str(Stack *stack, char *item)
+{
+    return stack_push(stack, item);
+}
+
 /* Type specific pop */
 
 bool stack_pop_int(Stack *stack, int *item)
@@ -222,6 +227,18 @@ bool stack_pop_double(Stack *stack, double *item)
     *item = *(double *)ptr;
 
     free(ptr);
+
+    return true;
+}
+
+bool stack_pop_str(Stack *stack, char **item)
+{
+    void *ptr;
+
+    if (!stack_pop(stack, &ptr))
+        return false;
+
+    *item = ptr;
 
     return true;
 }
