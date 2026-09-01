@@ -96,45 +96,76 @@ bool stack_peek(Stack *stack, void **item)
 
 /* Type specific push */
 
-bool stack_push_int(Stack *stack, int value)
+bool stack_push_int(Stack *stack, int item)
 {
-    int *ptr = (int *) malloc(sizeof(int));
+    int *ptr = (int *) malloc(sizeof(*ptr));
     
-    *ptr = value;
+    if (!ptr)
+        return false;
 
-    return stack_push(stack, ptr);
+    *ptr = item;
+    
+    if (!stack_push(stack, ptr))
+    {
+        free(ptr);
+        return false;
+    }
+
+    return true;
 }
 
-bool stack_push_char(Stack *stack, char value)
+bool stack_push_char(Stack *stack, char item)
 {
-    char *ptr = (char *) malloc(sizeof(char));
+    char *ptr = (char *) malloc(sizeof(*ptr));
     
-    *ptr = value;
+    if (!ptr)
+        return false;
 
-    return stack_push(stack, ptr);
+    *ptr = item;
+    
+    if (!stack_push(stack, ptr))
+    {
+        free(ptr);
+        return false;
+    }
+
+    return true;
 }
 
-bool stack_push_float(Stack *stack, float value)
+bool stack_push_float(Stack *stack, float item)
 {
-    float *ptr = (float *) malloc(sizeof(float));
+    float *ptr = (float *) malloc(sizeof(*ptr));
     
-    *ptr = value;
+    if (!ptr)
+        return false;
 
-    return stack_push(stack, ptr);
+    *ptr = item;
+    
+    if (!stack_push(stack, ptr))
+    {
+        free(ptr);
+        return false;
+    }
+
+    return true;
 }
 
-bool stack_push_double(Stack *stack, double value)
+bool stack_push_double(Stack *stack, double item)
 {
-    double *ptr = (double *) malloc(sizeof(double));
+    double *ptr = (double *) malloc(sizeof(*ptr));
     
-    *ptr = value;
+    if (!ptr)
+        return false;
 
-    return stack_push(stack, ptr);
-}
+    *ptr = item;
+    
+    if (!stack_push(stack, ptr))
+    {
+        free(ptr);
+        return false;
+    }
 
-bool stack_push_str(Stack *stack, char *value)
-{
-    return stack_push(stack, value);
+    return true;
 }
 
 /* Type specific pop */
@@ -143,9 +174,7 @@ bool stack_pop_int(Stack *stack, int *item)
 {
     void *ptr;
 
-    bool popped = stack_pop(stack, &ptr);
-
-    if (!popped)
+    if (!stack_pop(stack, &ptr))
         return false;
 
     *item = *(int *)ptr;
@@ -159,9 +188,7 @@ bool stack_pop_char(Stack *stack, char *item)
 {
     void *ptr;
 
-    bool popped = stack_pop(stack, &ptr);
-
-    if (!popped)
+    if (!stack_pop(stack, &ptr))
         return false;
 
     *item = *(char *)ptr;
@@ -175,9 +202,7 @@ bool stack_pop_float(Stack *stack, float *item)
 {
     void *ptr;
 
-    bool popped = stack_pop(stack, &ptr);
-
-    if (!popped)
+    if (!stack_pop(stack, &ptr))
         return false;
 
     *item = *(float *)ptr;
@@ -191,9 +216,7 @@ bool stack_pop_double(Stack *stack, double *item)
 {
     void *ptr;
 
-    bool popped = stack_pop(stack, &ptr);
-
-    if (!popped)
+    if (!stack_pop(stack, &ptr))
         return false;
 
     *item = *(double *)ptr;
@@ -202,9 +225,4 @@ bool stack_pop_double(Stack *stack, double *item)
 
     return true;
 }
-/*
-bool stack_pop_str(Stack *stack, char *item)
-{
-    return stack_pop(stack, &item);
-}
-*/
+

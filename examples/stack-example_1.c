@@ -6,26 +6,32 @@
 int main(void)
 {
     Stack stack;
+    int *number_to_push;
+    char *text_to_push;
+    void *popped_number;
+    void *popped_text;
+
     stack_initialize(&stack, 10);
 
-    int *number = (int*) malloc(sizeof(int));
-    char *text = (char*) malloc(12 * sizeof(char));
+    number_to_push = (int *) malloc(sizeof(int));
+    text_to_push = (char *) malloc(sizeof(char) * 15);
 
-    *number = 3;
-    strcpy(text, "Hello World");
+    *number_to_push = 1;
+    strcpy(text_to_push, "You are number");
 
-    stack_push(&stack, number);
-    stack_push(&stack, text);
+    stack_push(&stack, number_to_push);
+    stack_push(&stack, text_to_push);
 
-    char *text2 = (char*) stack_pop(&stack);
-    int *number2 = (int*) stack_pop(&stack);
+    stack_pop(&stack, &popped_text);
+    stack_pop(&stack, &popped_number);
 
-    printf("%s\n", text2);
-    printf("%d\n", *number2);
+    printf("%s ", (char *)popped_text);
+    printf("%d!\n", *(int *)popped_number);
 
     stack_finalize(&stack, true);
-    free(text2);
-    free(number2);
+    
+    free(popped_text);
+    free(popped_number);
     
     return 0;
 }
