@@ -15,7 +15,7 @@ bool stack_initialize(Stack *stack, size_t capacity)
     
     if (capacity > 0)
     {
-        stack->items = malloc(sizeof(*stack->items) * capacity);
+        stack->items = malloc(sizeof(void *) * capacity);
         
         if (!stack->items)
             return false;
@@ -99,7 +99,7 @@ bool stack_peek(Stack *stack, void **item)
 
 bool stack_push_int(Stack *stack, int item)
 {
-    int *ptr = (int *) malloc(sizeof(*ptr));
+    int *ptr = (int *) malloc(sizeof(int));
     
     if (!ptr)
         return false;
@@ -136,7 +136,7 @@ bool stack_pop_int(Stack *stack, int *item)
 
 bool stack_push_char(Stack *stack, char item)
 {
-    char *ptr = (char *) malloc(sizeof(*ptr));
+    char *ptr = (char *) malloc(sizeof(char));
     
     if (!ptr)
         return false;
@@ -173,7 +173,7 @@ bool stack_pop_char(Stack *stack, char *item)
 
 bool stack_push_float(Stack *stack, float item)
 {
-    float *ptr = (float *) malloc(sizeof(*ptr));
+    float *ptr = (float *) malloc(sizeof(float));
     
     if (!ptr)
         return false;
@@ -210,7 +210,7 @@ bool stack_pop_float(Stack *stack, float *item)
 
 bool stack_push_double(Stack *stack, double item)
 {
-    double *ptr = (double *) malloc(sizeof(*ptr));
+    double *ptr = (double *) malloc(sizeof(double));
     
     if (!ptr)
         return false;
@@ -252,7 +252,7 @@ bool stack_push_str(Stack *stack, char *item)
 
     size_t size = strlen(item) + 1;
 
-    char *ptr = (char *) malloc(sizeof(*ptr) * size);
+    char *ptr = (char *) malloc(sizeof(char) * size);
 
     if (!ptr)
         return false;
