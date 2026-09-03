@@ -11,13 +11,13 @@ int main(void)
     stack_push_str(&str_stack, "Two");
     stack_push_str(&str_stack, "One");
 
-    char *a, *b, *c;
+    char a[10], b[10], c[10];
 
-    stack_pop_str(&str_stack, &a);
-    stack_pop_str(&str_stack, &b);
-    stack_pop_str(&str_stack, &c);
+    stack_pop_str(&str_stack, a);
+    stack_pop_str(&str_stack, b);
+    stack_pop_str(&str_stack, c);
 
-    stack_finalize(&str_stack, false);
+    stack_finalize(&str_stack, true);
 
     printf("%s %s %s\n", a, b, c);
 

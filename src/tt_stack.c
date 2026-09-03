@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "tt_stack.h"
 
 /* Stack initialization and finalization */
@@ -246,20 +247,40 @@ bool stack_pop_double(Stack *stack, double *item)
 
 bool stack_push_str(Stack *stack, char *item)
 {
-    return stack_push(stack, item);
-}
-
-bool stack_pop_str(Stack *stack, char **item)
-{
     if (!item)
         return false;
 
+    size_t size = strlen(item) + 1;
+
+    char *ptr = (char *) malloc(sizeof(*ptr) * size);
+
+    if (!ptr)
+        return false;
+
+    strcpy(ptr, item);
+
+    if (!stack_push(stack, ptr))
+    {
+        free(ptr);
+        return false;
+    }
+
+    return true;
+}
+
+bool stack_pop_str(Stack *stack, char *item)
+{
+    if (!item)
+        return false;
+    
     void *ptr;
 
     if (!stack_pop(stack, &ptr))
         return false;
+    
+    strcpy(item, ptr);
 
-    *item = ptr;
+    free(ptr);
 
     return true;
 }
