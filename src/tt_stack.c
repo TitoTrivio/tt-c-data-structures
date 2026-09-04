@@ -2,7 +2,7 @@
 #include <string.h>
 #include "tt_stack.h"
 
-/* Stack initialization and finalization */
+// Stack initialization and finalization
 
 bool stack_initialize(Stack *stack, size_t capacity)
 {
@@ -29,18 +29,15 @@ bool stack_initialize(Stack *stack, size_t capacity)
     return true;
 }
 
-void stack_finalize(Stack *stack, bool free_items)
+void stack_finalize(Stack *stack)
 {
     if (!stack)
         return;
 
     if (stack->items)
     {
-        if (free_items)
-        {
-            for (size_t i = 0; i < stack->count; ++i)
-                free(stack->items[i]);
-        }
+        for (size_t i = 0; i < stack->count; ++i)
+            free(stack->items[i]);
 
         free(stack->items);
     }
@@ -50,9 +47,9 @@ void stack_finalize(Stack *stack, bool free_items)
     stack->capacity = 0;
 }
 
-/* Core stack operations */
+// Stack operations
 
-bool stack_push(Stack *stack, void *item)
+bool stack_push(Stack *stack, void *item, size_t size)
 {
     if (!stack)
         return false;
@@ -60,14 +57,18 @@ bool stack_push(Stack *stack, void *item)
     if (!stack->items || stack->count >= stack->capacity)
         return false;
 
-    stack->items[stack->count++] = item;
+    void *ptr = malloc(sizeof(void *));
+
+    memcpy(ptr, item, size);
+
+    stack->items[stack->count++] = ptr;
 
     return true;
 }
 
-bool stack_pop(Stack *stack, void **item)
+bool stack_pop(Stack *stack, void *dest, size_t size)
 {
-    if (!stack || !item)
+    if (!stack || !dest)
         return false;
     
     if (!stack->items || stack->count == 0)
@@ -75,212 +76,22 @@ bool stack_pop(Stack *stack, void **item)
     
     --stack->count;
 
-    *item = stack->items[stack->count];
+    memcpy(dest, stack->items[stack->count], size);
     
     stack->items[stack->count] = NULL;
 
     return true;
 }
 
-bool stack_peek(Stack *stack, void **item)
+bool stack_peek(Stack *stack, void *dest, size_t size)
 {
-    if (!stack || !item)
+    if (!stack || !dest)
         return false;
     
     if (!stack->items || stack->count == 0)
         return false;
     
-    *item = stack->items[stack->count - 1];
-
-    return true;
-}
-
-/* int operations */
-
-bool stack_push_int(Stack *stack, int item)
-{
-    int *ptr = (int *) malloc(sizeof(int));
-    
-    if (!ptr)
-        return false;
-
-    *ptr = item;
-    
-    if (!stack_push(stack, ptr))
-    {
-        free(ptr);
-        return false;
-    }
-
-    return true;
-}
-
-bool stack_pop_int(Stack *stack, int *item)
-{
-    if (!item)
-        return false;
-
-    void *ptr;
-
-    if (!stack_pop(stack, &ptr))
-        return false;
-
-    *item = *(int *)ptr;
-
-    free(ptr);
-
-    return true;
-}
-
-/* char operations */
-
-bool stack_push_char(Stack *stack, char item)
-{
-    char *ptr = (char *) malloc(sizeof(char));
-    
-    if (!ptr)
-        return false;
-
-    *ptr = item;
-    
-    if (!stack_push(stack, ptr))
-    {
-        free(ptr);
-        return false;
-    }
-
-    return true;
-}
-
-bool stack_pop_char(Stack *stack, char *item)
-{
-    if (!item)
-        return false;
-
-    void *ptr;
-
-    if (!stack_pop(stack, &ptr))
-        return false;
-
-    *item = *(char *)ptr;
-
-    free(ptr);
-
-    return true;
-}
-
-/* float operations */
-
-bool stack_push_float(Stack *stack, float item)
-{
-    float *ptr = (float *) malloc(sizeof(float));
-    
-    if (!ptr)
-        return false;
-
-    *ptr = item;
-    
-    if (!stack_push(stack, ptr))
-    {
-        free(ptr);
-        return false;
-    }
-
-    return true;
-}
-
-bool stack_pop_float(Stack *stack, float *item)
-{
-    if (!item)
-        return false;
-
-    void *ptr;
-
-    if (!stack_pop(stack, &ptr))
-        return false;
-
-    *item = *(float *)ptr;
-
-    free(ptr);
-
-    return true;
-}
-
-/* double operations */
-
-bool stack_push_double(Stack *stack, double item)
-{
-    double *ptr = (double *) malloc(sizeof(double));
-    
-    if (!ptr)
-        return false;
-
-    *ptr = item;
-    
-    if (!stack_push(stack, ptr))
-    {
-        free(ptr);
-        return false;
-    }
-
-    return true;
-}
-
-bool stack_pop_double(Stack *stack, double *item)
-{
-    if (!item)
-        return false;
-
-    void *ptr;
-
-    if (!stack_pop(stack, &ptr))
-        return false;
-
-    *item = *(double *)ptr;
-
-    free(ptr);
-
-    return true;
-}
-
-/* string operations */
-
-bool stack_push_str(Stack *stack, char *item)
-{
-    if (!item)
-        return false;
-
-    size_t size = strlen(item) + 1;
-
-    char *ptr = (char *) malloc(sizeof(char) * size);
-
-    if (!ptr)
-        return false;
-
-    strcpy(ptr, item);
-
-    if (!stack_push(stack, ptr))
-    {
-        free(ptr);
-        return false;
-    }
-
-    return true;
-}
-
-bool stack_pop_str(Stack *stack, char *item)
-{
-    if (!item)
-        return false;
-    
-    void *ptr;
-
-    if (!stack_pop(stack, &ptr))
-        return false;
-    
-    strcpy(item, ptr);
-
-    free(ptr);
+    memcpy(dest, stack->items[stack->count - 1], size);
 
     return true;
 }

@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 
-/* Stack definition */
+// Stack definition
 
 struct _Stack
 {
@@ -14,49 +14,19 @@ struct _Stack
 
 typedef struct _Stack Stack;
 
-/* Stack initialization and finalization */
+// Stack initialization and finalization
 
 bool stack_initialize(Stack *stack, size_t capacity);
 
-void stack_finalize(Stack *stack, bool free_items);
+void stack_finalize(Stack *stack);
 
-/* Core stack operations */
+// Stack operations
 
-bool stack_push(Stack *stack, void *item);
+bool stack_push(Stack *stack, void *item, size_t size);
 
-bool stack_pop(Stack *stack, void **item);
+bool stack_pop(Stack *stack, void *dest, size_t size);
 
-bool stack_peek(Stack *stack, void **item);
-
-/* int operations */
-
-bool stack_push_int(Stack *stack, int item);
-
-bool stack_pop_int(Stack *stack, int *item);
-
-/* char operations */
-
-bool stack_push_char(Stack *stack, char item);
-
-bool stack_pop_char(Stack *stack, char *item);
-
-/* float operations */
-
-bool stack_push_float(Stack *stack, float item);
-
-bool stack_pop_float(Stack *stack, float *item);
-
-/* double operations */
-
-bool stack_push_double(Stack *stack, double item);
-
-bool stack_pop_double(Stack *stack, double *item);
-
-/* string operations */
-
-bool stack_push_str(Stack *stack, char *item);
-
-bool stack_pop_str(Stack *stack, char *item);
+bool stack_peek(Stack *stack, void *dest, size_t size);
 
 #endif
 

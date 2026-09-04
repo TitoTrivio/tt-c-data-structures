@@ -1,38 +1,26 @@
-#include "tt_stack.h"
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "tt_stack.h"
 
-int main(void)
+int main()
 {
     Stack stack;
-    int *number_to_push;
-    char *text_to_push;
-    void *popped_number;
-    void *popped_text;
 
-    stack_initialize(&stack, 10);
+    stack_initialize(&stack, 4);
 
-    number_to_push = (int *) malloc(sizeof(int));
-    text_to_push = (char *) malloc(sizeof(char) * 15);
+    stack_push(&stack, "Four", 5);
+    stack_push(&stack, "Three", 6);
+    stack_push(&stack, "Two", 4);
+    stack_push(&stack, "One", 4);
 
-    *number_to_push = 1;
-    strcpy(text_to_push, "You are number");
+    char text[6];
 
-    stack_push(&stack, number_to_push);
-    stack_push(&stack, text_to_push);
+    stack_pop(&stack, text, 4);
+    printf("%s\n", text);
+    stack_pop(&stack, text, 4);
+    printf("%s\n", text);
+    stack_pop(&stack, text, 6);
+    printf("%s\n", text);
 
-    stack_pop(&stack, &popped_text);
-    stack_pop(&stack, &popped_number);
-
-    printf("%s ", (char *)popped_text);
-    printf("%d!\n", *(int *)popped_number);
-
-    stack_finalize(&stack, true);
-    
-    free(popped_text);
-    free(popped_number);
-    
-    return 0;
+    stack_finalize(&stack);
 }
 
