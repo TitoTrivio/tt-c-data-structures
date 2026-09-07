@@ -57,7 +57,7 @@ bool stack_push(Stack *stack, void *item, size_t size)
     if (!stack->items || stack->count >= stack->capacity)
         return false;
 
-    void *ptr = malloc(sizeof(void *));
+    void *ptr = malloc(size);
 
     memcpy(ptr, item, size);
 
