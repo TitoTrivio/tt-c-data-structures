@@ -19,9 +19,6 @@ bool stack_initialize(Stack *stack, size_t capacity)
         
         if (!stack->items)
             return false;
-
-        for(size_t i = 0; i < capacity; ++i)
-            stack->items[i] = NULL;
     }
 
     stack->capacity = capacity;
