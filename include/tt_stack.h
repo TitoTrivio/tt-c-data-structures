@@ -22,11 +22,11 @@ void stack_finalize(Stack *stack);
 
 // Stack operations
 
-bool stack_push(Stack *stack, void *item, size_t size);
+bool stack_push(Stack *stack, const void *item, size_t size);
 
 bool stack_pop(Stack *stack, void *dest, size_t size);
 
-bool stack_peek(Stack *stack, void *dest, size_t size);
+bool stack_peek(const Stack *stack, void *dest, size_t size);
 
 #endif
 
