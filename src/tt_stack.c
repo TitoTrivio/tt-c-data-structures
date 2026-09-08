@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include "tt_stack.h"
@@ -7,6 +8,9 @@
 bool stack_initialize(Stack *stack, size_t capacity)
 {
     if (!stack)
+        return false;
+    
+    if (capacity > SIZE_MAX / sizeof(*stack->items))
         return false;
 
     stack->items = NULL;
