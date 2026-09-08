@@ -15,7 +15,7 @@ bool stack_initialize(Stack *stack, size_t capacity)
     
     if (capacity > 0)
     {
-        stack->items = malloc(sizeof(void *) * capacity);
+        stack->items = malloc(sizeof(*stack->items) * capacity);
         
         if (!stack->items)
             return false;
@@ -51,13 +51,16 @@ void stack_finalize(Stack *stack)
 
 bool stack_push(Stack *stack, void *item, size_t size)
 {
-    if (!stack)
+    if (!stack || size == 0)
         return false;
     
     if (!stack->items || stack->count >= stack->capacity)
         return false;
 
     void *ptr = malloc(size);
+
+    if (!ptr)
+        return false;
 
     memcpy(ptr, item, size);
 
@@ -77,7 +80,9 @@ bool stack_pop(Stack *stack, void *dest, size_t size)
     --stack->count;
 
     memcpy(dest, stack->items[stack->count], size);
-    
+
+    free(stack->items[stack->count]);
+
     stack->items[stack->count] = NULL;
 
     return true;
