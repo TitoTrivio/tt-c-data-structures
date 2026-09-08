@@ -48,7 +48,7 @@ void stack_finalize(Stack *stack)
 
 bool stack_push(Stack *stack, void *item, size_t size)
 {
-    if (!stack || size == 0)
+    if (!stack || !item || size == 0)
         return false;
     
     if (!stack->items || stack->count >= stack->capacity)
