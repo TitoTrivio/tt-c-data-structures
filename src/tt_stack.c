@@ -38,7 +38,7 @@ void stack_finalize(Stack *stack)
     if (stack->items)
     {
         for (size_t i = 0; i < stack->count; ++i)
-            free(stack->items[i]);
+            free(stack->items[i].data);
 
         free(stack->items);
     }
@@ -64,8 +64,11 @@ bool stack_push(Stack *stack, const void *item, const size_t size)
         return false;
 
     memcpy(ptr, item, size);
+    
+    size_t index = stack->count++;
 
-    stack->items[stack->count++] = ptr;
+    stack->items[index].data = ptr;
+    stack->items[index].size = size;
 
     return true;
 }
@@ -77,14 +80,17 @@ bool stack_pop(Stack *stack, void *dest, const size_t size)
     
     if (!stack->items || stack->count == 0)
         return false;
-    
+
+    size_t index = stack->count - 1;
+
+    if (stack->items[index].size != size)
+        return false;
+
+    memcpy(dest, stack->items[index].data, size);
+
     --stack->count;
 
-    memcpy(dest, stack->items[stack->count], size);
-
-    free(stack->items[stack->count]);
-
-    stack->items[stack->count] = NULL;
+    free(stack->items[index].data);
 
     return true;
 }
@@ -96,8 +102,13 @@ bool stack_peek(const Stack *stack, void *dest, const size_t size)
     
     if (!stack->items || stack->count == 0)
         return false;
-    
-    memcpy(dest, stack->items[stack->count - 1], size);
+
+    size_t index = stack->count - 1;
+
+    if (stack->items[index].size != size)
+        return false;
+
+    memcpy(dest, stack->items[index].data, size);
 
     return true;
 }
