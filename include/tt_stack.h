@@ -5,22 +5,18 @@
 
 // Stack definition
 
-struct _StackItem
+typedef struct StackItem
 {
     void *data;
     size_t size;
-};
+} StackItem;
 
-typedef struct _StackItem StackItem;
-
-struct _Stack
+typedef struct Stack
 {
     StackItem *items;
     size_t count;
     size_t capacity;
-};
-
-typedef struct _Stack Stack;
+} Stack;
 
 // Stack initialization and finalization
 
