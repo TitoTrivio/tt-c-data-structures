@@ -113,3 +113,14 @@ bool stack_peek(const Stack *stack, void *dest, const size_t size)
     return true;
 }
 
+bool stack_is_empty(const Stack *stack)
+{
+    if (!stack)
+        return true;
+
+    if (stack->count == 0)
+        return true;
+
+    return false;
+}
+

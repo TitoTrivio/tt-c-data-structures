@@ -32,5 +32,7 @@ bool stack_pop(Stack *stack, void *dest, const size_t size);
 
 bool stack_peek(const Stack *stack, void *dest, const size_t size);
 
+bool stack_is_empty(const Stack *stack);
+
 #endif
 
