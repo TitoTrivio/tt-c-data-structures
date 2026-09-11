@@ -5,7 +5,7 @@
 
 // Stack initialization and finalization
 
-bool stack_initialize(Stack *stack, size_t capacity)
+bool stack_initialize(Stack *stack, const size_t capacity)
 {
     if (!stack)
         return false;
@@ -50,7 +50,7 @@ void stack_finalize(Stack *stack)
 
 // Stack operations
 
-bool stack_push(Stack *stack, const void *item, size_t size)
+bool stack_push(Stack *stack, const void *item, const size_t size)
 {
     if (!stack || !item || size == 0)
         return false;
@@ -70,7 +70,7 @@ bool stack_push(Stack *stack, const void *item, size_t size)
     return true;
 }
 
-bool stack_pop(Stack *stack, void *dest, size_t size)
+bool stack_pop(Stack *stack, void *dest, const size_t size)
 {
     if (!stack || !dest)
         return false;
@@ -89,7 +89,7 @@ bool stack_pop(Stack *stack, void *dest, size_t size)
     return true;
 }
 
-bool stack_peek(const Stack *stack, void *dest, size_t size)
+bool stack_peek(const Stack *stack, void *dest, const size_t size)
 {
     if (!stack || !dest)
         return false;
