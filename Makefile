@@ -11,14 +11,14 @@ endif
 CC ?= gcc
 AR ?= ar
 
-BUILD ?= debug
+CONFIG ?= debug
 
 # Project configuration
 
 TARGET := tt_c_data_structures
 
-BUILD_DIR := build/$(BUILD)
-BIN_DIR   := bin/$(BUILD)
+BUILD_DIR := build/$(CONFIG)
+BIN_DIR   := bin/$(CONFIG)
 SRC_DIRS  := src
 INC_DIRS  := include
 
@@ -54,12 +54,12 @@ CFLAGS   := $(C_STANDARD) $(WARN_FLAGS)
 LDFLAGS  := -shared
 ARFLAGS  := rcs
 
-ifeq ($(BUILD), release)
+ifeq ($(CONFIG), release)
     CFLAGS += -O2
-else ifeq ($(BUILD), debug)
+else ifeq ($(CONFIG), debug)
     CFLAGS += -O0 -g
 else
-    $(error Invalid BUILD value: $(BUILD). Use 'release' or 'debug')
+    $(error Invalid CONFIG value: $(CONFIG). Use 'release' or 'debug')
 endif
 
 ifeq ($(DETECTED_OS), Windows_NT)
