@@ -1,17 +1,9 @@
-# OS dependent configuration
+# OS detection
 
 ifeq ($(OS), Windows_NT)
     DETECTED_OS := $(OS)
 else
     DETECTED_OS := $(shell uname -s);
-endif
-
-ifeq ($(DETECTED_OS), Windows_NT)
-    LIB_EXT  := .dll
-    PIC_FLAG :=
-else
-    LIB_EXT  := .so
-    PIC_FLAG := -fPIC
 endif
 
 # Build configuration
@@ -22,14 +14,23 @@ BUILD ?= debug
 
 # Project configuration
 
-TARGET := tt_c_data_structures
+TARGET := libtt_c_data_structures
 
 BUILD_DIR := build/$(BUILD)
 BIN_DIR   := bin/$(BUILD)
 SRC_DIRS  := src
 INC_DIRS  := include
 
-LIBRARY := $(BIN_DIR)/lib$(TARGET)$(LIB_EXT)
+SHARED_LIBRARY := $(BIN_DIR)/$(TARGET)
+
+ifeq ($(DETECTED_OS), Windows_NT)
+    IMPORT_LIBRARY := $(BIN_DIR)/$(TARGET)
+
+    SHARED_LIBRARY := $(SHARED_LIBRARY).dll
+    IMPORT_LIBRARY := $(IMPORT_LIBRARY).dll.a
+else
+    SHARED_LIBRARY := $(SHARED_LIBRARY).so
+endif
 
 # Files
 
@@ -44,12 +45,12 @@ DEP_FLAGS  := -MMD -MP
 C_STANDARD := -std=c23
 WARN_FLAGS := -Wall -Wextra -Wpedantic
 
-CPPFLAGS := $(INC_FLAGS) $(DEP_FLAGS)
-CFLAGS   := $(C_STANDARD) $(WARN_FLAGS) $(PIC_FLAG)
-LDFLAGS  := -shared
-
 RELEASE_FLAGS := -O3
 DEBUG_FLAGS   := -O0 -g
+
+CPPFLAGS := $(INC_FLAGS) $(DEP_FLAGS)
+CFLAGS   := $(C_STANDARD) $(WARN_FLAGS)
+LDFLAGS  := -shared
 
 ifeq ($(BUILD), release)
     CFLAGS += $(RELEASE_FLAGS)
@@ -59,11 +60,19 @@ else
     $(error Invalid BUILD value: $(BUILD). Use 'release' or 'debug')
 endif
 
+ifeq ($(DETECTED_OS), Windows_NT)
+    LDFLAGS += -Wl,--out-implib,$(IMPORT_LIBRARY)
+else
+    CFLAGS += -fPIC
+endif
+
 # Targets
 
-all: $(LIBRARY)
+all: shared
 
-$(LIBRARY): $(OBJ_FILES)
+shared: $(SHARED_LIBRARY)
+
+$(SHARED_LIBRARY): $(OBJ_FILES)
 	@[ -d $(dir $@) ] || mkdir -p $(dir $@)
 	$(CC) $(LDFLAGS) -o $@ $^
 
@@ -74,7 +83,7 @@ $(BUILD_DIR)/%.o: %.c
 clean:
 	rm -rf $(BUILD_DIR) $(BIN_DIR)
 
-.PHONY: all clean
+.PHONY: all shared clean
 
 # Include dependencies
 
