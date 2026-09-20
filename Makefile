@@ -73,11 +73,11 @@ all: shared
 shared: $(SHARED_LIBRARY)
 
 $(SHARED_LIBRARY): $(OBJ_FILES)
-	@[ -d $(dir $@) ] || mkdir -p $(dir $@)
+	@mkdir -p $(dir $@)
 	$(CC) $(LDFLAGS) -o $@ $^
 
 $(BUILD_DIR)/%.o: %.c
-	@[ -d $(dir $@) ] || mkdir -p $(dir $@)
+	@mkdir -p $(dir $@)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 clean:
