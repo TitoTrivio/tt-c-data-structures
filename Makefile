@@ -47,7 +47,14 @@ DEP_FILES := $(patsubst %.c,$(BUILD_DIR)/%.d,$(SRC_FILES))
 INC_FLAGS  := $(foreach D,$(SRC_DIRS) $(INC_DIRS),-I$(D))
 DEP_FLAGS  := -MMD -MP
 C_STANDARD := -std=c23
-WARN_FLAGS := -Wall -Wextra -Wpedantic
+WARN_FLAGS := \
+    -Wall \
+    -Wextra \
+    -Wpedantic \
+    -Wshadow \
+    -Wformat=2 \
+    -Wstrict-prototypes \
+    -Wmissing-prototypes
 
 CPPFLAGS := $(INC_FLAGS) $(DEP_FLAGS)
 CFLAGS   := $(C_STANDARD) $(WARN_FLAGS)
