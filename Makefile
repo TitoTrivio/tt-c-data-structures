@@ -8,8 +8,8 @@ endif
 
 # Build configuration
 
-CC := gcc
-AR := ar
+CC ?= gcc
+AR ?= ar
 
 BUILD ?= debug
 
