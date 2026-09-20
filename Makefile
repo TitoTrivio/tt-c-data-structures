@@ -3,7 +3,7 @@
 ifeq ($(OS), Windows_NT)
     DETECTED_OS := $(OS)
 else
-    DETECTED_OS := $(shell uname -s);
+    DETECTED_OS := $(shell uname -s)
 endif
 
 # Build configuration
@@ -15,18 +15,18 @@ BUILD ?= debug
 
 # Project configuration
 
-TARGET := libtt_c_data_structures
+TARGET := tt_c_data_structures
 
 BUILD_DIR := build/$(BUILD)
 BIN_DIR   := bin/$(BUILD)
 SRC_DIRS  := src
 INC_DIRS  := include
 
-STATIC_LIBRARY := $(BIN_DIR)/$(TARGET)
-SHARED_LIBRARY := $(BIN_DIR)/$(TARGET)
+STATIC_LIBRARY := $(BIN_DIR)/lib$(TARGET)
+SHARED_LIBRARY := $(BIN_DIR)/lib$(TARGET)
 
 ifeq ($(DETECTED_OS), Windows_NT)
-    IMPORT_LIBRARY := $(BIN_DIR)/$(TARGET)
+    IMPORT_LIBRARY := $(BIN_DIR)/lib$(TARGET)
 
     STATIC_LIBRARY := $(STATIC_LIBRARY).a
     SHARED_LIBRARY := $(SHARED_LIBRARY).dll
@@ -49,18 +49,15 @@ DEP_FLAGS  := -MMD -MP
 C_STANDARD := -std=c23
 WARN_FLAGS := -Wall -Wextra -Wpedantic
 
-RELEASE_FLAGS := -O3
-DEBUG_FLAGS   := -O0 -g
-
 CPPFLAGS   := $(INC_FLAGS) $(DEP_FLAGS)
 CFLAGS     := $(C_STANDARD) $(WARN_FLAGS)
 LDFLAGS    := -shared
 AR_OPTIONS := rcs
 
 ifeq ($(BUILD), release)
-    CFLAGS += $(RELEASE_FLAGS)
+    CFLAGS += -O2
 else ifeq ($(BUILD), debug)
-    CFLAGS += $(DEBUG_FLAGS)
+    CFLAGS += -O0 -g
 else
     $(error Invalid BUILD value: $(BUILD). Use 'release' or 'debug')
 endif
