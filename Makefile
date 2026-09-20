@@ -9,6 +9,7 @@ endif
 # Build configuration
 
 CC := gcc
+AR := ar
 
 BUILD ?= debug
 
@@ -21,14 +22,17 @@ BIN_DIR   := bin/$(BUILD)
 SRC_DIRS  := src
 INC_DIRS  := include
 
+STATIC_LIBRARY := $(BIN_DIR)/$(TARGET)
 SHARED_LIBRARY := $(BIN_DIR)/$(TARGET)
 
 ifeq ($(DETECTED_OS), Windows_NT)
     IMPORT_LIBRARY := $(BIN_DIR)/$(TARGET)
 
+    STATIC_LIBRARY := $(STATIC_LIBRARY).a
     SHARED_LIBRARY := $(SHARED_LIBRARY).dll
     IMPORT_LIBRARY := $(IMPORT_LIBRARY).dll.a
 else
+    STATIC_LIBRARY := $(STATIC_LIBRARY).a
     SHARED_LIBRARY := $(SHARED_LIBRARY).so
 endif
 
@@ -48,9 +52,10 @@ WARN_FLAGS := -Wall -Wextra -Wpedantic
 RELEASE_FLAGS := -O3
 DEBUG_FLAGS   := -O0 -g
 
-CPPFLAGS := $(INC_FLAGS) $(DEP_FLAGS)
-CFLAGS   := $(C_STANDARD) $(WARN_FLAGS)
-LDFLAGS  := -shared
+CPPFLAGS   := $(INC_FLAGS) $(DEP_FLAGS)
+CFLAGS     := $(C_STANDARD) $(WARN_FLAGS)
+LDFLAGS    := -shared
+AR_OPTIONS := rcs
 
 ifeq ($(BUILD), release)
     CFLAGS += $(RELEASE_FLAGS)
@@ -68,9 +73,15 @@ endif
 
 # Targets
 
-all: shared
+all: static shared
+
+static: $(STATIC_LIBRARY)
 
 shared: $(SHARED_LIBRARY)
+
+$(STATIC_LIBRARY): $(OBJ_FILES)
+	@mkdir -p $(dir $@)
+	$(AR) $(AR_OPTIONS) $@ $^
 
 $(SHARED_LIBRARY): $(OBJ_FILES)
 	@mkdir -p $(dir $@)
@@ -83,7 +94,7 @@ $(BUILD_DIR)/%.o: %.c
 clean:
 	rm -rf $(BUILD_DIR) $(BIN_DIR)
 
-.PHONY: all shared clean
+.PHONY: all static shared clean
 
 # Include dependencies
 
