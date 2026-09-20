@@ -49,10 +49,10 @@ DEP_FLAGS  := -MMD -MP
 C_STANDARD := -std=c23
 WARN_FLAGS := -Wall -Wextra -Wpedantic
 
-CPPFLAGS   := $(INC_FLAGS) $(DEP_FLAGS)
-CFLAGS     := $(C_STANDARD) $(WARN_FLAGS)
-LDFLAGS    := -shared
-AR_OPTIONS := rcs
+CPPFLAGS := $(INC_FLAGS) $(DEP_FLAGS)
+CFLAGS   := $(C_STANDARD) $(WARN_FLAGS)
+LDFLAGS  := -shared
+ARFLAGS  := rcs
 
 ifeq ($(BUILD), release)
     CFLAGS += -O2
@@ -78,7 +78,7 @@ shared: $(SHARED_LIBRARY)
 
 $(STATIC_LIBRARY): $(OBJ_FILES)
 	@mkdir -p $(dir $@)
-	$(AR) $(AR_OPTIONS) $@ $^
+	$(AR) $(ARFLAGS) $@ $^
 
 $(SHARED_LIBRARY): $(OBJ_FILES)
 	@mkdir -p $(dir $@)
